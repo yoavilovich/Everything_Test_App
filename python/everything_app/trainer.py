@@ -47,7 +47,7 @@ def get_genre_dictionary (data): #return a genre dictionary, i.e, all the possib
     return genre_dist.keys()
     #genre_dicitonary_values = genre_dist.values()
 
-def get_genre_indexes(c): 
+def get_genre_indexes(c,dictionary,genre_dictionary): 
     selected_movie_genre=genre_dictionary[c]
     genre_indexes=[] 
     for index,movie in enumerate(data):
@@ -57,46 +57,56 @@ def get_genre_indexes(c):
                 genre_indexes.append(index) 
     return genre_indexes   
 
-def get_genre_probability(c):
-    return float(len(get_genre_indexes(c)))/float(len(data))
+def get_genre_probability(c,dictionary,genre_dictionary):
+    return float(len(get_genre_indexes(c,dictionary,genre_dictionary)))/float(len(data))
 
-def Nic(i,c):
+def Nic(i,c,dictionary,genre_dictionary):
     Nic=0
-    indexes = get_genre_indexes(c)
+    indexes = get_genre_indexes(c,dictionary,genre_dictionary)
     for j in range(len(indexes)):
         if dictionary[i] in plots[indexes[j]]:
             Nic+=1
     return Nic
 
-def Nc(c):
-    number_of_movies_in_genre=len(get_genre_indexes(c))
+def Nc(c,dictionary,genre_dictionary):
+    number_of_movies_in_genre=len(get_genre_indexes(c,dictionary,genre_dictionary))
     return number_of_movies_in_genre
 
-def Tetaic(i,c):
-    teta=float(Nic(i,c)+1)/float(Nc(c)+2)
+def Tetaic(i,c,dictionary,genre_dictionary):
+    teta=float(Nic(i,c,dictionary,genre_dictionary)+1)/float(Nc(c,dictionary,genre_dictionary)+2)
     return teta
 
-def getTeta():
+def getTeta(dictionary,genre_dictionary):
     teta=[]
     for c in range(len(genre_dictionary)):
         teta_c=[] 
         for i in range(len(dictionary)):
-            teta_c.append(Tetaic(i,c))
+            teta_c.append(Tetaic(i,c,dictionary,genre_dictionary))
         teta.append(teta_c)
     return teta
 
+data=get_training_set() 
+
+results=get_dictionary(data)
+plots=results[0]
+tokens=results[1]
+dictionary=results[2]
+
+
+genre_dictionary=get_genre_dictionary(data)
+
+
+def main():
+    genre_probability=[]
+    for index in range(len(genre_dictionary)):   
+        genre_probability.append(get_genre_probability(index,dictionary,genre_dictionary))
+    teta=getTeta(dictionary,genre_dictionary)
+    return (teta,dictionary,genre_dictionary,genre_probability)
+
 if __name__ == "__main__":
+    main()
 
-    data=get_training_set() 
 
-    results=get_dictionary(data)
-    plots=results[0]
-    tokens=results[1]
-    dictionary=results[2]
 
-    genre_dictionary=get_genre_dictionary(data)
-
-    teta=getTeta()
-    print(teta[1][3])
             
 
