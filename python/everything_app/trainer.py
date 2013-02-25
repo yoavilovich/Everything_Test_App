@@ -12,10 +12,10 @@ import urllib
 
 def get_training_set(): #extracts the training set from file into a python list
     data = []
-    with open('/home/yoav/python/everything_app/movies_test.json') as f:
+    with open('/home/yoav/python/everything_app/movies_train.json') as f:
         for line in f:
             data.append(json.loads(line))
-    return data[:1000]  #1000 is to minimize training set for speedier results
+    return data[:10000]  #1000 is to minimize training set for speedier results
 
 def get_dictionary(data): 
 #    finds the most common words from combining all plots together, 
